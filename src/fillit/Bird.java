@@ -1,5 +1,7 @@
 package fillit;
 
+import java.util.ArrayList;
+
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -9,6 +11,7 @@ public class Bird implements Collidable{
 	private Circle _bird;
 	private Double _xAngle;
 	private Double _yAngle;
+	private Boolean _dead = false;
 	
 	public Bird(Pane gamePane){
 		_bird = new Circle(10);
@@ -34,8 +37,8 @@ public class Bird implements Collidable{
 	}
 	
 	public void moveRandom(){
-		_bird.setCenterX(_bird.getCenterX() + (10*_xAngle));
-		_bird.setCenterY(_bird.getCenterY() + (10*_yAngle));
+		_bird.setCenterX(_bird.getCenterX() + (5*_xAngle));
+		_bird.setCenterY(_bird.getCenterY() + (5*_yAngle));
 		
 	}
 	
@@ -61,10 +64,47 @@ public class Bird implements Collidable{
 	}
 
 	@Override
-	public boolean intersects(Ship ship) {
+	public boolean intersectsShip(Ship ship) {
 		double xDif = ship.getX() - _bird.getCenterX();
 		double yDif = ship.getY() - _bird.getCenterY();
 		double distanceSquared = xDif * xDif + yDif * yDif;
 		return distanceSquared < (2*(_bird.getRadius() + ship.getRadius())) * (2*(_bird.getRadius() + ship.getRadius()));
+	}
+
+	@Override
+	public void intersectsLine(ArrayList<Line> line) {
+		for(int i = 0; i < line.size(); i++){
+//			System.out.println(line.get(i).getPositionX());
+			double xDif = line.get(i).getPositionX() - _bird.getCenterX();
+			double yDif = line.get(i).getPositionY() - _bird.getCenterY();
+			double distanceSquared = xDif * xDif + yDif * yDif;
+//			System.out.println(distanceSquared);
+			if( distanceSquared < ((_bird.getRadius() + 7)) * ((_bird.getRadius() + 7))){
+				if(line.get(i).getSafe() == true){
+					if(_yAngle >= _xAngle){
+						_yAngle = _yAngle*-1;
+					}
+					else{
+						_xAngle = _xAngle *-1;
+					}
+				}
+				else{
+					_dead = true;
+					_yAngle = 0.0;
+					_xAngle = 0.0;
+				}
+			}
+			
+//			System.out.println("Line: " + line.get(i).getPositionX());
+//			System.out.println("Bird" + _bird.getCenterX());
+//			if(_bird.intersects(line.get(i).getX(), line.get(i).getY(), 3, 3)){
+//				System.out.println("hi");
+//				_xAngle = _xAngle*-1;
+//			}
+		}
+	}
+	
+	public boolean getDead(){
+		return _dead;
 	}
 }

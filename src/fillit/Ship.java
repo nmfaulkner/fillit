@@ -24,26 +24,26 @@ public class Ship extends Circle{
 	
 	public void moveUp(){
 		if(_ship.getCenterY() > 0){
-		_ship.setCenterY(_ship.getCenterY() - 10);
+		_ship.setCenterY(_ship.getCenterY() - 8);
 		}
 		
 	}
 	
 	public void moveLeft(){
 		if(_ship.getCenterX() > 0){
-		_ship.setCenterX(_ship.getCenterX() - 10);
+		_ship.setCenterX(_ship.getCenterX() - 8);
 		}
 	}
 	
 	public void moveRight(){
 		if(_ship.getCenterX() < 650){
-		_ship.setCenterX(_ship.getCenterX() + 10);
+		_ship.setCenterX(_ship.getCenterX() + 8);
 		}
 	}
 	
 	public void moveDown(){
 		if(_ship.getCenterY() < 500){
-		_ship.setCenterY(_ship.getCenterY() + 10);
+		_ship.setCenterY(_ship.getCenterY() + 8);
 		}
 	}
 	

@@ -13,7 +13,7 @@ public class Line extends Rectangle{
 	
 	public Line(Pane gamePane, double xLocation, double yLocation){
 		_safe = false;
-		_line = new Rectangle(3,3);
+		_line = new Rectangle(4,4);
 		_line.setFill(Color.RED);
 		_line.setX(xLocation);
 		_line.setY(yLocation);
@@ -29,8 +29,12 @@ public class Line extends Rectangle{
 		return _line.getY();
 	}
 	
-	public void setSafe(){
+	public void setSafeTrue(){
 		_safe = true;
+	}
+	
+	public void setSafeFalse(){
+		_safe = false;
 	}
 	
 	public boolean getSafe(){

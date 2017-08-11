@@ -16,8 +16,8 @@ public class Bird implements Collidable{
 	public Bird(Pane gamePane){
 		_bird = new Circle(10);
 		_bird.setFill(Color.GREEN);
-		_bird.setCenterX(250);
-		_bird.setCenterY(325);
+		_bird.setCenterX(325);
+		_bird.setCenterY(250);
 		gamePane.getChildren().addAll(_bird);
 		
 	}
@@ -37,8 +37,10 @@ public class Bird implements Collidable{
 	}
 	
 	public void moveRandom(){
-		_bird.setCenterX(_bird.getCenterX() + (5*_xAngle));
-		_bird.setCenterY(_bird.getCenterY() + (5*_yAngle));
+		if(_dead == false){
+		_bird.setCenterX(_bird.getCenterX() + (3*_xAngle));
+		_bird.setCenterY(_bird.getCenterY() + (3*_yAngle));
+		}
 		
 	}
 	
@@ -68,32 +70,47 @@ public class Bird implements Collidable{
 		double xDif = ship.getX() - _bird.getCenterX();
 		double yDif = ship.getY() - _bird.getCenterY();
 		double distanceSquared = xDif * xDif + yDif * yDif;
-		return distanceSquared < (2*(_bird.getRadius() + ship.getRadius())) * (2*(_bird.getRadius() + ship.getRadius()));
+		return distanceSquared < (1.5*(_bird.getRadius() + ship.getRadius())) * (1.5*(_bird.getRadius() + ship.getRadius()));
 	}
 
 	@Override
 	public void intersectsLine(ArrayList<Line> line) {
-		for(int i = 0; i < line.size(); i++){
-//			System.out.println(line.get(i).getPositionX());
-			double xDif = line.get(i).getPositionX() - _bird.getCenterX();
-			double yDif = line.get(i).getPositionY() - _bird.getCenterY();
-			double distanceSquared = xDif * xDif + yDif * yDif;
-//			System.out.println(distanceSquared);
-			if( distanceSquared < ((_bird.getRadius() + 7)) * ((_bird.getRadius() + 7))){
+		for(int i = 1; i < line.size(); i++){
+			if(_bird.intersects(line.get(i).getPositionX(), line.get(i).getPositionY(), 10, 10)){
 				if(line.get(i).getSafe() == true){
-					if(_yAngle >= _xAngle){
+					if(line.get(i-1).getPositionY() == line.get(i).getPositionY()){
 						_yAngle = _yAngle*-1;
 					}
 					else{
-						_xAngle = _xAngle *-1;
+						_xAngle = _xAngle*-1;
 					}
 				}
 				else{
-					_dead = true;
+					this.setDead();
 					_yAngle = 0.0;
 					_xAngle = 0.0;
 				}
 			}
+//			System.out.println(line.get(i).getPositionX());
+//			double xDif = line.get(i).getPositionX() - _bird.getCenterX();
+//			double yDif = line.get(i).getPositionY() - _bird.getCenterY();
+//			double distanceSquared = xDif * xDif + yDif * yDif;
+////			System.out.println(distanceSquared);
+//			if( distanceSquared < (1.5*(_bird.getRadius() + 7)) * (1.5*(_bird.getRadius() + 7))){
+//				if(line.get(i).getSafe() == true){
+//					if(_yAngle >= _xAngle){
+//						_yAngle = _yAngle*-1;
+//					}
+//					else{
+//						_xAngle = _xAngle *-1;
+//					}
+//				}
+//				else{
+//					this.setDead();
+//					_yAngle = 0.0;
+//					_xAngle = 0.0;
+//				}
+//			}
 			
 //			System.out.println("Line: " + line.get(i).getPositionX());
 //			System.out.println("Bird" + _bird.getCenterX());
@@ -107,4 +124,9 @@ public class Bird implements Collidable{
 	public boolean getDead(){
 		return _dead;
 	}
+	
+	public void setDead(){
+		_dead = true;
+	}
+	
 }

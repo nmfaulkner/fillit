@@ -21,6 +21,8 @@ public class Game{
 	private Pane _gamePane;
 	private ArrayList<Line> _lines;
 	private boolean _safe;
+	private int _xDirection;
+	private int _yDirection;
 	
 	
 	public Game(Pane gamePane){
@@ -47,17 +49,23 @@ public class Game{
 			if (keyPressed == KeyCode.RIGHT) {
 				if(!_bird.getDead()){
 				_ship.moveRight();
+				_xDirection = -10;
+				_yDirection = 0;
 				}
 			}
 			if (keyPressed == KeyCode.LEFT) {
 				if(!_bird.getDead()){
 				_ship.moveLeft();
+				_xDirection = 10;
+				_yDirection = 0;
 				}
 			}
 
 			if (keyPressed == KeyCode.UP) {
 				if(!_bird.getDead()){
 				_ship.moveUp();
+				_xDirection = 0;
+				_yDirection = 10;
 				}
 
 			}
@@ -65,6 +73,8 @@ public class Game{
 			if (keyPressed == KeyCode.DOWN) {
 				if(!_bird.getDead()){
 				_ship.moveDown();
+				_xDirection = 0;
+				_yDirection = -10;
 				}
 			}
 
@@ -75,7 +85,7 @@ public class Game{
 	public void setUpTimeline() {
 		_timeline = new Timeline();
 		_timeline.getKeyFrames().add(
-				new KeyFrame(Duration.millis(10), new TimeHandler()));
+				new KeyFrame(Duration.millis(8), new TimeHandler()));
 		_timeline.setCycleCount(Timeline.INDEFINITE);
 		_timeline.play();
 	}
@@ -99,18 +109,46 @@ public class Game{
 			}
 			
 			_bird.intersectsLine(_lines);
-			notSafe();
+			
+			if(_ship.getY() > 498 || _ship.getY() < 2 || _ship.getX() > 648 || _ship.getX() < 2){
+				isSafe();
+				}
+			
+			shipHitsLine();
 
 		}
 
 	}
 	
-	public void notSafe(){
-		if(_ship.getY() > 498 || _ship.getY() < 2 || _ship.getX() > 648 || _ship.getX() < 2){
-			System.out.println("Safe");
-			for(int i=0; i<_lines.size();i++){
-				_lines.get(i).setSafe();
+	
+	public void isSafe(){
+		for(int j = 0; j < _lines.size(); j++){
+			_lines.get(j).setSafeTrue();
+		}
+	}
+	
+	public void shipHitsLine(){
+		for(int i = 0; i < _lines.size(); i++){
+//			System.out.println(line.get(i).getPositionX());
+			double xDif = _lines.get(i).getPositionX() - _ship.getX();
+			double yDif = _lines.get(i).getPositionY() - _ship.getY();
+			double distanceSquared = xDif * xDif + yDif * yDif;
+			if( distanceSquared < ((_ship.getRadius() + 10)) * ((_ship.getRadius() + 10))){
+				if(_lines.get(i).getSafe() == true){
+					this.isSafe();
+					
+				}
+//				else{
+//					_bird.setDead();
+//				}
 			}
+			
+//			System.out.println("Line: " + line.get(i).getPositionX());
+//			System.out.println("Bird" + _bird.getCenterX());
+//			if(_bird.intersects(line.get(i).getX(), line.get(i).getY(), 3, 3)){
+//				System.out.println("hi");
+//				_xAngle = _xAngle*-1;
+//			}
 		}
 	}
 	
